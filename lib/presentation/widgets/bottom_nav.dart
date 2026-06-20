@@ -1,10 +1,29 @@
-import 'package:document_scanner/presentation/widgets/bottom_nav_icon_button.dart';
-import 'package:flutter/material.dart';
+import 'dart:io';
 
-class BottomNavBar extends StatelessWidget {
+import 'package:document_scanner/presentation/views/recognize_screen.dart';
+import 'package:document_scanner/presentation/widgets/bottom_nav_icon_button.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+
+class BottomNavBar extends StatefulWidget {
   const BottomNavBar({
     super.key,
   });
+
+  @override
+  State<BottomNavBar> createState() => _BottomNavBarState();
+}
+
+class _BottomNavBarState extends State<BottomNavBar> {
+
+  late ImagePicker imagePicker;
+
+  @override
+  void initState() {
+    super.initState();
+    imagePicker = ImagePicker();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,8 +54,20 @@ class BottomNavBar extends StatelessWidget {
             BottomNavBarIconButton(
               icon: Icons.image_outlined,
               size: 32,
-              function: () {
-                
+              function: () async {
+                XFile? imageFile = await imagePicker.pickImage(source: ImageSource.gallery);
+
+                if (imageFile != null) {
+                  File image = File(imageFile.path);
+
+                  Navigator.push(
+                    // ignore: use_build_context_synchronously
+                    context, 
+                    CupertinoPageRoute(builder: (_) => RecognizeScreen(image: image))
+                  );
+                }
+
+
               },
             ),
           ],

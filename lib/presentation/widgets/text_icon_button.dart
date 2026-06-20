@@ -12,26 +12,26 @@ class TextIconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: .center,
-      children: [
-        InkWell(
-          onTap: function,
-          child: Icon(
+    return InkWell(
+      onTap: function,
+      child: Column(
+        mainAxisAlignment: .center,
+        children: [
+          Icon(
             icon,
             size: size,
             color: Colors.white,
           ),
-        ),
-    
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 12,
-            color: Colors.white,
-          ),
-        )
-      ],
+      
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 12,
+              color: Colors.white,
+            ),
+          )
+        ],
+      ),
     );
   }
 }

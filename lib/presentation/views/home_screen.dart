@@ -14,9 +14,18 @@ class HomeScreen extends StatelessWidget {
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
           child: Column(
+            mainAxisAlignment: .spaceEvenly,
             children: [
               TopBoxBar(),
-              
+
+              // Scanner
+              Card(
+                color: Colors.black,
+                child: Container(
+                  height: MediaQuery.of(context).size.height * .6,
+                ),
+              ),
+
               BottomNavBar(),
             ],
           ),
