@@ -1,4 +1,5 @@
 import 'package:document_scanner/presentation/widgets/bottom_nav.dart';
+import 'package:document_scanner/presentation/widgets/top_bar.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -14,6 +15,8 @@ class HomeScreen extends StatelessWidget {
           width: MediaQuery.of(context).size.width,
           child: Column(
             children: [
+              TopBoxBar(),
+              
               BottomNavBar(),
             ],
           ),
