@@ -14,23 +14,31 @@ class RecognizeScreen extends StatefulWidget {
 }
 
 class _RecognizeScreenState extends State<RecognizeScreen> {
-
   late TextRecognizer textRecognizer;
+
+  String result = "";
+  bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
     textRecognizer = TextRecognizer(script: TextRecognitionScript.latin);
-    doTextRecognation();
+    doTextRecognition();
   }
-  
 
-  dynamic doTextRecognation() async {
+  Future<void> doTextRecognition() async {
     InputImage inputImage = InputImage.fromFile(widget.image);
 
-    final RecognizedText recognizedText = await textRecognizer.processImage(inputImage);
+    final RecognizedText recognizedText =
+        await textRecognizer.processImage(inputImage);
 
-    String text = recognizedText.text;
+    if (!mounted) return;
+
+    setState(() {
+      result = recognizedText.text;
+      isLoading = false;
+    });
+
     for (TextBlock block in recognizedText.blocks) {
       final Rect rect = block.boundingBox;
       final List<Point<int>> cornerPoints = block.cornerPoints;
@@ -38,12 +46,15 @@ class _RecognizeScreenState extends State<RecognizeScreen> {
       final List<String> languages = block.recognizedLanguages;
 
       for (TextLine line in block.lines) {
-        // Same getters as TextBlock
-        for (TextElement element in line.elements) {
-          // Same getters as TextBlock
-        }
+        for (TextElement element in line.elements) {}
       }
     }
+  }
+
+  @override
+  void dispose() {
+    textRecognizer.close();
+    super.dispose();
   }
 
   @override
@@ -51,18 +62,54 @@ class _RecognizeScreenState extends State<RecognizeScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blueAccent,
-        title: Text('Recognizer'),
+        title: const Text('Recognizer'),
       ),
-      body: Stack(
-        children: [
-          Container(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
-              image: DecorationImage(image: FileImage(widget.image))
-            ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                height: MediaQuery.of(context).size.height * .5,
+                width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: FileImage(widget.image),
+                  ),
+                ),
+              ),
+              Container(
+                color: Colors.blue,
+                height: 50,
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: const Row(
+                  children: [
+                    Text(
+                      'result Text',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    Spacer(),
+                    Icon(Icons.copy, color: Colors.white),
+                  ],
+                ),
+              ),
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(24),
+                  child: isLoading
+                      ? const CircularProgressIndicator()
+                      : Text(
+                          result,
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        ),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
