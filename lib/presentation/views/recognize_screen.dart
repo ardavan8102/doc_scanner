@@ -38,17 +38,6 @@ class _RecognizeScreenState extends State<RecognizeScreen> {
       result = recognizedText.text;
       isLoading = false;
     });
-
-    for (TextBlock block in recognizedText.blocks) {
-      final Rect rect = block.boundingBox;
-      final List<Point<int>> cornerPoints = block.cornerPoints;
-      final String text = block.text;
-      final List<String> languages = block.recognizedLanguages;
-
-      for (TextLine line in block.lines) {
-        for (TextElement element in line.elements) {}
-      }
-    }
   }
 
   @override
@@ -62,7 +51,8 @@ class _RecognizeScreenState extends State<RecognizeScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blueAccent,
-        title: const Text('Recognizer'),
+        title: const Text('Recognizer', style: TextStyle(color: Colors.white)),
+        iconTheme: IconThemeData(color: Colors.white),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
